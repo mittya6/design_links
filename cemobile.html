@@ -92,14 +92,17 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            color: #ffffff;
+            align-items: center;
             border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 8px;
             flex: 1;
             overflow: hidden;
             max-height: 80px;
-            cursor: pointer;
-            padding:8px;
+            color: #ffffff;
+        }
+
+        main .app:hover {
+            background: rgba(101, 162, 228, 0.4);
         }
 
         main input[type="radio"]:checked+.app {
@@ -113,31 +116,58 @@
             z-index: 1;
         }
 
-        main .app:hover {
-            background: rgba(101, 162, 228, 0.4);
+        main input[type="radio"]:checked+.app .icon {
+            display: none;
         }
 
         main .app .icon.icon-img {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8px;
+
         }
 
         main .app .icon.icon-img label {
             font-size: 32px;
+            cursor: pointer;
         }
 
-        main .app .icon.icon-title label {
+        main .app h2.icon.icon-title {
+            width: 100%;
             font-size: 8px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            cursor: pointer;
         }
 
         main .app .detail {
             display: none;
+        }
+
+        main input[type="radio"]:checked +.app .detail {
+            display: block;
+        }
+
+        main input[type="radio"]:checked +.app .detail.detail-img {
+            font-size: 64px;
+        }
+
+        main input[type="radio"]:checked +.app .detail.detail-menu{
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        main input[type="radio"]:checked +.app .detail.detail-menu button{
+            outline:none;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            padding: 16px;
+            color: #ffffff;
+            font-size: 32px;
         }
 
         footer {
@@ -186,31 +216,58 @@
                     <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
                     <h2 class="detail detail-title">AWS Console</h2>
                     <div class="detail detail-menu">
+                        <div>
+                            <button><i class="fa-solid fa-user"></i></button>
+                        </div>
+                        <div>
+                            <button><i class="fa-solid fa-key"></i></button>
+                        </div>
                     </div>
                 </div>
 
                 <input type="radio" name="curApp" id="radio2">
                 <div class="app">
-                    <div class="icon">
+                    <div class="icon icon-img">
                         <label for="radio2"><i class="fa-brands fa-aws"></i></label>
                     </div>
-                    <h2>AWS</h2>
+                    <h2 class="icon icon-title"><label for="radio2">AWS Consolessdgfsdgsdgfsdgsdgsd</label></h2>
+
+                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
+                    <h2 class="detail detail-title">AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+                    <div class="detail detail-menu">
+                        <div>
+                            <button><i class="fa-solid fa-user"></i></button>
+                        </div>
+                        <div>
+                            <button><i class="fa-solid fa-key"></i></button>
+                        </div>
+                    </div>
                 </div>
 
                 <input type="radio" name="curApp" id="radio3">
                 <div class="app">
-                    <div class="icon">
+                    <div class="icon icon-img">
                         <label for="radio3"><i class="fa-brands fa-aws"></i></label>
                     </div>
-                    <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+                    <h2 class="icon icon-title"><label for="radio3">AWS Consolessdgfsdgsdgfsdgsdgsd</label></h2>
+
+                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
+                    <h2 class="detail detail-title">AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+                    <div class="detail detail-menu">
+                    </div>
                 </div>
 
                 <input type="radio" name="curApp" id="radio4">
                 <div class="app">
-                    <div class="icon">
+                    <div class="icon icon-img">
                         <label for="radio4"><i class="fa-brands fa-aws"></i></label>
                     </div>
-                    <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+                    <h2 class="icon icon-title"><label for="radio4">AWS Consolessdgfsdgsdgfsdgsdgsd</label></h2>
+
+                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
+                    <h2 class="detail detail-title">AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+                    <div class="detail detail-menu">
+                    </div>
                 </div>
             </main>
 
