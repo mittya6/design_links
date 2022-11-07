@@ -74,10 +74,8 @@
         }
 
         main {
-            display: flex;
-            justify-content: space-around;
-            /* align-items: center; */
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns:repeat(auto-fit, 80px);
             gap: 16px;
             padding: 16px;
             position: relative;
@@ -98,7 +96,9 @@
             flex: 1;
             overflow: hidden;
             max-height: 80px;
+            min-width: 80px;
             color: #ffffff;
+            transition: 0.5s;
         }
 
         main .app:hover {
@@ -112,7 +112,9 @@
             width: 100%;
             height: 100%;
             max-height: 100vh;
-            background: #ff0000;
+            background: linear-gradient(to bottom, #ff4f8b, #dff1ff);
+            border-radius: 0;
+            border:none;
             z-index: 1;
         }
 
@@ -151,13 +153,20 @@
         }
 
         main input[type="radio"]:checked +.app .detail.detail-img {
-            font-size: 64px;
+            font-size: 128px;
+        }
+
+        main input[type="radio"]:checked +.app .detail.detail-title{
+            border: 1px solid blur;
+            text-align: center;
         }
 
         main input[type="radio"]:checked +.app .detail.detail-menu{
             display: flex;
             justify-content: space-around;
             width: 100%;
+            position: absolute;
+            bottom: 16px;
         }
 
         main input[type="radio"]:checked +.app .detail.detail-menu button{
@@ -213,8 +222,8 @@
                     </div>
                     <h2 class="icon icon-title"><label for="radio1">AWS Console</label></h2>
 
-                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
-                    <h2 class="detail detail-title">AWS Console</h2>
+                    <div class="detail detail-img"><a href="#"><i class="fa-brands fa-aws"></a></i></div>
+                    <h2 class="detail detail-title"><a href="#">AWS Console</a></h2>
                     <div class="detail detail-menu">
                         <div>
                             <button><i class="fa-solid fa-user"></i></button>
@@ -267,6 +276,44 @@
                     <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
                     <h2 class="detail detail-title">AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
                     <div class="detail detail-menu">
+                    </div>
+                </div>
+
+                <input type="radio" name="curApp" id="radio5">
+                <div class="app">
+                    <div class="icon icon-img">
+                        <label for="radio5"><i class="fa-brands fa-aws"></i></label>
+                    </div>
+                    <h2 class="icon icon-title"><label for="radio5">AWS Console</label></h2>
+
+                    <div class="detail detail-img"><a href="#"><i class="fa-brands fa-aws"></a></i></div>
+                    <h2 class="detail detail-title"><a href="#">AWS Console</a></h2>
+                    <div class="detail detail-menu">
+                        <div>
+                            <button><i class="fa-solid fa-user"></i></button>
+                        </div>
+                        <div>
+                            <button><i class="fa-solid fa-key"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="radio" name="curApp" id="radio6">
+                <div class="app">
+                    <div class="icon icon-img">
+                        <label for="radio6"><i class="fa-brands fa-aws"></i></label>
+                    </div>
+                    <h2 class="icon icon-title"><label for="radio6">AWS Console</label></h2>
+
+                    <div class="detail detail-img"><a href="#"><i class="fa-brands fa-aws"></a></i></div>
+                    <h2 class="detail detail-title"><a href="#">AWS Console</a></h2>
+                    <div class="detail detail-menu">
+                        <div>
+                            <button><i class="fa-solid fa-user"></i></button>
+                        </div>
+                        <div>
+                            <button><i class="fa-solid fa-key"></i></button>
+                        </div>
                     </div>
                 </div>
             </main>
