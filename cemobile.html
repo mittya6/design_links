@@ -81,7 +81,7 @@
             gap: 16px;
             padding: 16px;
             position: relative;
-            height: 70%;
+            height: 80%;
         }
 
         main input[type="radio"] {
@@ -99,9 +99,10 @@
             overflow: hidden;
             max-height: 80px;
             cursor: pointer;
+            padding:8px;
         }
 
-        main input[type="radio"]:checked + .app {
+        main input[type="radio"]:checked+.app {
             position: absolute;
             top: 0;
             bottom: 0;
@@ -113,22 +114,21 @@
         }
 
         main .app:hover {
-            background: rgba(101, 162, 228, 0.4)
+            background: rgba(101, 162, 228, 0.4);
         }
 
         main .app .icon.icon-img {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0;
             padding: 8px;
         }
 
-        main .app .icon.icon-img label{
+        main .app .icon.icon-img label {
             font-size: 32px;
         }
 
-        main .app .icon.icon-title label{
+        main .app .icon.icon-title label {
             font-size: 8px;
             text-align: center;
             white-space: nowrap;
@@ -136,25 +136,22 @@
             text-overflow: ellipsis;
         }
 
-        main .app .detail{
+        main .app .detail {
             display: none;
         }
 
         footer {
             width: 100%;
+            height: 10%;
             background: rgba(255, 255, 255, 0.3);
             text-align: center;
-            height: 20%;
         }
 
         footer label {
-            font-size: 64px;
-            height: 70px;
+            font-size: 48px;
             color: #000;
-            border: none;
             cursor: pointer;
-            background: transparent;
-            padding: 0;
+            line-height: 64px;
         }
 
         footer input {
@@ -165,68 +162,64 @@
 
 <body>
     <form>
-    <div class="mobile">
+        <div class="mobile">
 
-        <header>
-            <div>
-                9:30
-            </div>
-            <div class="headerRight">
-                <div><i class="fa-solid fa-signal"></i></div>
-                <div><i class="fa-solid fa-wifi"></i></div>
-                <div><i class="fa-solid fa-battery-three-quarters"></i></div>
-            </div>
-        </header>
-
-        <main>
-            <input type="radio" name="curApp" id="radio1">
-            <div class="app">
-                <div class="icon icon-img">
-                    <label for="radio1"><i class="fa-brands fa-aws"></i></label>
+            <header>
+                <div>
+                    9:30
                 </div>
-                <h2 class="icon icon-title"><label for="radio1">AWS Console</label></h2>
-
-                <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
-                <h2 class="detail detail-title">AWS Console</h2>
-                <div class="detail detail-menu">
+                <div class="headerRight">
+                    <div><i class="fa-solid fa-signal"></i></div>
+                    <div><i class="fa-solid fa-wifi"></i></div>
+                    <div><i class="fa-solid fa-battery-three-quarters"></i></div>
                 </div>
-            </div>
+            </header>
 
-            <input type="radio" name="curApp" id="radio2">
-            <div class="app">
-                <div class="icon">
-                    <label for="radio2"><i class="fa-brands fa-aws"></i></label>
+            <main>
+                <input type="radio" name="curApp" id="radio1">
+                <div class="app">
+                    <div class="icon icon-img">
+                        <label for="radio1"><i class="fa-brands fa-aws"></i></label>
+                    </div>
+                    <h2 class="icon icon-title"><label for="radio1">AWS Console</label></h2>
+
+                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
+                    <h2 class="detail detail-title">AWS Console</h2>
+                    <div class="detail detail-menu">
+                    </div>
                 </div>
-                <h2>AWS</h2>
-            </div>
 
-            <input type="radio" name="curApp" id="radio3">
-            <div class="app">
-                <div class="icon">
-                    <label for="radio3"><i class="fa-brands fa-aws"></i></label>
+                <input type="radio" name="curApp" id="radio2">
+                <div class="app">
+                    <div class="icon">
+                        <label for="radio2"><i class="fa-brands fa-aws"></i></label>
+                    </div>
+                    <h2>AWS</h2>
                 </div>
-                <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
-            </div>
 
-            <input type="radio" name="curApp" id="radio4">
-            <div class="app">
-                <div class="icon">
-                    <label for="radio4"><i class="fa-brands fa-aws"></i></label>
+                <input type="radio" name="curApp" id="radio3">
+                <div class="app">
+                    <div class="icon">
+                        <label for="radio3"><i class="fa-brands fa-aws"></i></label>
+                    </div>
+                    <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
                 </div>
-                <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
-            </div>
 
-        </main>
+                <input type="radio" name="curApp" id="radio4">
+                <div class="app">
+                    <div class="icon">
+                        <label for="radio4"><i class="fa-brands fa-aws"></i></label>
+                    </div>
+                    <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+                </div>
+            </main>
 
-        <footer>
-            <label>
-                <input type="reset" value="●">
-                ●
-            </label>
-        </footer>
+            <footer>
+                <label><input type="reset" value="●">●</label>
+            </footer>
 
-    </div>
-</form>
+        </div>
+    </form>
 </body>
 
 </html>
