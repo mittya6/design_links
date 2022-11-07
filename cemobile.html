@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #ff4f8b, #dff1ff);
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            background: #00d2ff;
+            bottom: 5%;
+            left: 10%;
+            width: 40%;
+            height: 40%;
+            filter: blur(150px);
+            z-index: -1;
+
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            background: #fffd87;
+            bottom: 10%;
+            right: 10%;
+            width: 50%;
+            height: 40%;
+            filter: blur(150px);
+            z-index: -1;
+
+        }
+
+        .mobile {
+            height: 90vh;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 5px 45px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(2px);
+            aspect-ratio: 3 / 5;
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 20px;
+            color: #ffffff;
+            height: 10%;
+        }
+
+        .headerRight {
+            display: flex;
+            gap: 8px;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-around;
+            /* align-items: center; */
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px;
+            position: relative;
+            height: 70%;
+        }
+
+        main input[type="radio"] {
+            display: none;
+        }
+
+        main .app {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            flex: 1;
+            overflow: hidden;
+            max-height: 80px;
+            cursor: pointer;
+        }
+
+        main input[type="radio"]:checked + .app {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            max-height: 100vh;
+            background: #ff0000;
+            z-index: 1;
+        }
+
+        main .app:hover {
+            background: rgba(101, 162, 228, 0.4)
+        }
+
+        main .app .icon.icon-img {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0;
+            padding: 8px;
+        }
+
+        main .app .icon.icon-img label{
+            font-size: 32px;
+        }
+
+        main .app .icon.icon-title label{
+            font-size: 8px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        main .app .detail{
+            display: none;
+        }
+
+        footer {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            height: 20%;
+        }
+
+        footer label {
+            font-size: 64px;
+            height: 70px;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            padding: 0;
+        }
+
+        footer input {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+    <div class="mobile">
+
+        <header>
+            <div>
+                9:30
+            </div>
+            <div class="headerRight">
+                <div><i class="fa-solid fa-signal"></i></div>
+                <div><i class="fa-solid fa-wifi"></i></div>
+                <div><i class="fa-solid fa-battery-three-quarters"></i></div>
+            </div>
+        </header>
+
+        <main>
+            <input type="radio" name="curApp" id="radio1">
+            <div class="app">
+                <div class="icon icon-img">
+                    <label for="radio1"><i class="fa-brands fa-aws"></i></label>
+                </div>
+                <h2 class="icon icon-title"><label for="radio1">AWS Console</label></h2>
+
+                <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
+                <h2 class="detail detail-title">AWS Console</h2>
+                <div class="detail detail-menu">
+                </div>
+            </div>
+
+            <input type="radio" name="curApp" id="radio2">
+            <div class="app">
+                <div class="icon">
+                    <label for="radio2"><i class="fa-brands fa-aws"></i></label>
+                </div>
+                <h2>AWS</h2>
+            </div>
+
+            <input type="radio" name="curApp" id="radio3">
+            <div class="app">
+                <div class="icon">
+                    <label for="radio3"><i class="fa-brands fa-aws"></i></label>
+                </div>
+                <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+            </div>
+
+            <input type="radio" name="curApp" id="radio4">
+            <div class="app">
+                <div class="icon">
+                    <label for="radio4"><i class="fa-brands fa-aws"></i></label>
+                </div>
+                <h2>AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
+            </div>
+
+        </main>
+
+        <footer>
+            <label>
+                <input type="reset" value="●">
+                ●
+            </label>
+        </footer>
+
+    </div>
+</form>
+</body>
+
+</html>
