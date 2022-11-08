@@ -67,6 +67,7 @@
                         // 要素削除
                         document.body.removeChild(tmp);
 
+                        //alertify.set('notifier','position', 'bottom-center');
                         alertify.success('copied');
 
                         return result;
@@ -78,7 +79,7 @@
             const interval = () => {
                 const time = document.querySelector('#time');
                 const curDate = new Date();
-                time.innerText = curDate.getHours() + ':' + curDate.getMinutes();
+                time.innerText = String(curDate.getHours()).padStart(2, '0') + ':' + String(curDate.getMinutes()).padStart(2, '0');
             }
             interval();
             setInterval(interval, 1000);
@@ -179,6 +180,7 @@
             overflow: hidden;
             color: #ffffff;
             animation: animate-reverse 0.3s linear;
+            transition: transform 0.5s;
         }
 
         @keyframes animate-reverse {
@@ -192,8 +194,9 @@
             }
         }
 
-        main .app:hover {
+        main input[type="radio"]:not(:checked):hover+.app {
             background: rgba(101, 162, 228, 0.4);
+            transform: scale(1.1);
         }
 
         main input[type="radio"]:checked+.app {
@@ -209,7 +212,7 @@
             border: none;
             z-index: 1;
 
-            animation: animate 0.1s linear;
+            animation: animate 0.3s linear;
         }
 
         main input[type="radio"]:checked+.app~.app {
@@ -221,7 +224,6 @@
                 transform: scale(0);
 
             }
-
             100% {
                 transform: scale(1);
             }
@@ -266,6 +268,10 @@
             color: #3730a3;
         }
 
+        main input[type="radio"]:checked+.app .detail a:hover {
+            background: rgba(101, 162, 228, 0.4);
+        }
+
 
         main input[type="radio"]:checked+.app .detail.detail-img {
             font-size: 128px;
@@ -278,21 +284,41 @@
 
         main input[type="radio"]:checked+.app .detail.detail-menu {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 32px;
             width: 100%;
 
         }
 
+
         main input[type="radio"]:checked+.app .detail.detail-menu button {
             margin-top: 64px;
+            width: 64px;
             outline: none;
             background: transparent;
             color: #3730a3;
             border: 1px solid #3730a3;
             border-radius: 8px;
-            padding: 16px;
+            padding: 8px;
             font-size: 32px;
+            line-height: 0;
             cursor: pointer;
+            transition: transform 0.5s;
+        }
+
+
+
+        main input[type="radio"]:checked+.app .detail.detail-menu button:hover {
+            background: rgba(101, 162, 228, 0.4);
+        }
+
+        main input[type="radio"]:checked+.app .detail.detail-menu button:active {
+            transform: scale(0.9);
+        }
+        
+        main input[type="radio"]:checked+.app .detail.detail-menu button span{
+            font-size: 8px;
+
         }
 
         footer {
@@ -325,7 +351,7 @@
 
             <header>
                 <div id="time">
-                    9:30
+                    00:00
                 </div>
                 <div class="headerRight">
                     <div><i class="fa-solid fa-signal"></i></div>
@@ -348,10 +374,10 @@
                         <h2 class="detail detail-title"><a :href="link.url" target="_blank">{{ link.name }}</a></h2>
                         <div class="detail detail-menu">
                             <div>
-                                <button @click="execCopy(link.user)"><i class="fa-solid fa-user"></i></button>
+                                <button @click="execCopy(link.user)"><i class="fa-solid fa-user"></i><br><span>user</span></button>
                             </div>
                             <div>
-                                <button><i class="fa-solid fa-key"></i></button>
+                                <button @click="execCopy(link.password)"><i class="fa-solid fa-key"></i><br><span>password</span></button>
                             </div>
                         </div>
                     </div>
