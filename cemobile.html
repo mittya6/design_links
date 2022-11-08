@@ -4,9 +4,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js"
+        integrity="sha512-JnjG+Wt53GspUQXQhc+c4j8SBERsgJAoHeehagKHlxQN+MtCCmFDghX9/AcbkkNRZptyZU4zC8utK59M5L45Iw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/vue@next"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.min.css"
+        integrity="sha512-IXuoq1aFd2wXs4NqGskwX2Vb+I8UJ+tGJEu/Dc0zwLNKeQ7CW3Sr6v0yU3z5OQWe3eScVIkER4J9L7byrgR/fA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/themes/default.min.css"
+        integrity="sha512-RgUjDpwjEDzAb7nkShizCCJ+QTSLIiJO1ldtuxzs0UIBRH4QpOjUU9w47AF9ZlviqV/dOFGWF6o7l3lttEFb6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        const data = {
+
+            links: [
+                { name: 'tomcat', icon: 'fa-solid fa-cat', url: 'https://tomcat.apache.org/', user: 'tomcat_account', password: 'tomcat_password' },
+                { name: 'google', icon: 'fa-brands fa-google', url: 'https://www.google.com/', user: 'google_account', password: 'google_password' },
+                { name: 'aws', icon: 'fa-brands fa-aws', url: 'https://aws.amazon.com/jp/', user: 'aws_account', password: 'aws_password' },
+                { name: 'twitter', icon: 'fa-brands fa-twitter', url: 'https://twitter.com/', user: 'user_account', password: 'mistery_password' },
+                { name: 'LinkedIn', icon: 'fa-brands fa-linkedin', url: 'https://www.linkedin.com/', user: 'user_account', password: 'mistery_password' },
+                { name: 'github', icon: 'fa-brands fa-github', url: 'https://github.com/', user: 'user_account', password: 'mistery_password' },
+                { name: 'facebook', icon: 'fa-brands fa-facebook', url: 'https://www.facebook.com/', user: 'user_account', password: 'mistery_password' },
+                { name: 'youtube', icon: 'fa-brands fa-youtube', url: 'https://www.youtube.com/', user: 'user_account', password: 'mistery_password' }
+            ]
+        }
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const vm = Vue.createApp({
+                data() {
+                    return data
+                },
+                methods: {
+                    execCopy: function (string) {
+                        // 空div 生成
+                        var tmp = document.createElement("div");
+                        // 選択用のタグ生成
+                        var pre = document.createElement('pre');
+
+                        // 親要素のCSSで user-select: none だとコピーできないので書き換える
+                        pre.style.webkitUserSelect = 'auto';
+                        pre.style.userSelect = 'auto';
+
+                        tmp.appendChild(pre).textContent = string;
+
+                        // 要素を画面外へ
+                        var s = tmp.style;
+                        s.position = 'fixed';
+                        s.right = '200%';
+
+                        // body に追加
+                        document.body.appendChild(tmp);
+                        // 要素を選択
+                        document.getSelection().selectAllChildren(tmp);
+
+                        // クリップボードにコピー
+                        var result = document.execCommand("copy");
+
+                        // 要素削除
+                        document.body.removeChild(tmp);
+
+                        alertify.success('copied');
+
+                        return result;
+                    }
+                }
+            }).mount('#mobile');
+
+
+            const interval = () => {
+                const time = document.querySelector('#time');
+                const curDate = new Date();
+                time.innerText = curDate.getHours() + ':' + curDate.getMinutes();
+            }
+            interval();
+            setInterval(interval, 1000);
+        });
+
+
+    </script>
     <style>
         * {
             margin: 0;
@@ -76,7 +155,7 @@
 
         main {
             display: grid;
-            grid-template-columns:repeat(4, 80px);
+            grid-template-columns: repeat(4, 80px);
             justify-content: center;
             align-content: center;
             gap: 16px;
@@ -103,11 +182,12 @@
         }
 
         @keyframes animate-reverse {
-            0%{
+            0% {
                 transform: scale(0);
 
             }
-            100%{
+
+            100% {
                 transform: scale(1);
             }
         }
@@ -116,37 +196,38 @@
             background: rgba(101, 162, 228, 0.4);
         }
 
-        main input[type="radio"]:checked +.app {
+        main input[type="radio"]:checked+.app {
             position: absolute;
             top: 0;
+            left: 0;
             bottom: 0;
             width: 100%;
             height: 100%;
             max-height: 100vh;
-            /* background: linear-gradient(to bottom, #ff4f8b, #dff1ff); */
             background: #f5f5f4;
             border-radius: 0;
-            border:none;
+            border: none;
             z-index: 1;
 
             animation: animate 0.1s linear;
         }
 
-        main input[type="radio"]:checked +.app ~ .app{
-            display:hidden;
+        main input[type="radio"]:checked+.app~.app {
+            display: hidden;
         }
 
         @keyframes animate {
-            0%{
+            0% {
                 transform: scale(0);
 
             }
-            100%{
+
+            100% {
                 transform: scale(1);
             }
         }
 
-        main input[type="radio"]:checked +.app .icon {
+        main input[type="radio"]:checked+.app .icon {
             display: none;
         }
 
@@ -176,30 +257,35 @@
             display: none;
         }
 
-        main input[type="radio"]:checked +.app .detail {
+        main input[type="radio"]:checked+.app .detail {
             display: block;
+
+        }
+
+        main input[type="radio"]:checked+.app .detail a {
             color: #3730a3;
         }
 
-        main input[type="radio"]:checked +.app .detail.detail-img {
+
+        main input[type="radio"]:checked+.app .detail.detail-img {
             font-size: 128px;
         }
 
-        main input[type="radio"]:checked +.app .detail.detail-title{
+        main input[type="radio"]:checked+.app .detail.detail-title {
             border: 1px solid blur;
             text-align: center;
         }
 
-        main input[type="radio"]:checked +.app .detail.detail-menu{
+        main input[type="radio"]:checked+.app .detail.detail-menu {
             display: flex;
             justify-content: space-around;
             width: 100%;
-            position: absolute;
-            bottom: 16px;
+
         }
 
-        main input[type="radio"]:checked +.app .detail.detail-menu button{
-            outline:none;
+        main input[type="radio"]:checked+.app .detail.detail-menu button {
+            margin-top: 64px;
+            outline: none;
             background: transparent;
             color: #3730a3;
             border: 1px solid #3730a3;
@@ -220,14 +306,14 @@
             display: none;
         }
 
-        footer svg{
+        footer svg {
             margin: 16px;
             object-fit: contain;
             height: 50%;
             cursor: pointer;
         }
 
-        footer svg:hover circle{
+        footer svg:hover circle {
             fill: black;
         }
     </style>
@@ -235,10 +321,10 @@
 
 <body>
     <form>
-        <div class="mobile">
+        <div class="mobile" id="mobile">
 
             <header>
-                <div>
+                <div id="time">
                     9:30
                 </div>
                 <div class="headerRight">
@@ -249,107 +335,28 @@
             </header>
 
             <main>
-                <input type="radio" name="curApp" id="radio1">
-                <div class="app">
-                    <div class="icon icon-img">
-                        <label for="radio1"><i class="fa-brands fa-aws"></i></label>
-                    </div>
-                    <h2 class="icon icon-title"><label for="radio1">AWS Console</label></h2>
-
-                    <div class="detail detail-img"><a href="#"><i class="fa-brands fa-aws"></a></i></div>
-                    <h2 class="detail detail-title"><a href="#">AWS Console</a></h2>
-                    <div class="detail detail-menu">
-                        <div>
-                            <button><i class="fa-solid fa-user"></i></button>
+                <div v-for="(link, index) in links">
+                    <input type="radio" name="curApp" :id="'radio' + index">
+                    <div class="app">
+                        <div class="icon icon-img">
+                            <label :for="'radio' + index"><i :class="link.icon"></i></label>
                         </div>
-                        <div>
-                            <button><i class="fa-solid fa-key"></i></button>
-                        </div>
-                    </div>
-                </div>
+                        <h2 class="icon icon-title"><label :for="'radio' + index">{{ link.name }}</label></h2>
 
-                <input type="radio" name="curApp" id="radio2">
-                <div class="app">
-                    <div class="icon icon-img">
-                        <label for="radio2"><i class="fa-brands fa-aws"></i></label>
-                    </div>
-                    <h2 class="icon icon-title"><label for="radio2">AWS Consolessdgfsdgsdgfsdgsdgsd</label></h2>
-
-                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
-                    <h2 class="detail detail-title">AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
-                    <div class="detail detail-menu">
-                        <div>
-                            <button><i class="fa-solid fa-user"></i></button>
-                        </div>
-                        <div>
-                            <button><i class="fa-solid fa-key"></i></button>
+                        <div class="detail detail-img"><a :href="link.url" target="_blank"><i
+                                    :class="link.icon"></a></i></div>
+                        <h2 class="detail detail-title"><a :href="link.url" target="_blank">{{ link.name }}</a></h2>
+                        <div class="detail detail-menu">
+                            <div>
+                                <button @click="execCopy(link.user)"><i class="fa-solid fa-user"></i></button>
+                            </div>
+                            <div>
+                                <button><i class="fa-solid fa-key"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <input type="radio" name="curApp" id="radio3">
-                <div class="app">
-                    <div class="icon icon-img">
-                        <label for="radio3"><i class="fa-brands fa-aws"></i></label>
-                    </div>
-                    <h2 class="icon icon-title"><label for="radio3">AWS Consolessdgfsdgsdgfsdgsdgsd</label></h2>
-
-                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
-                    <h2 class="detail detail-title">AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
-                    <div class="detail detail-menu">
-                    </div>
-                </div>
-
-                <input type="radio" name="curApp" id="radio4">
-                <div class="app">
-                    <div class="icon icon-img">
-                        <label for="radio4"><i class="fa-brands fa-aws"></i></label>
-                    </div>
-                    <h2 class="icon icon-title"><label for="radio4">AWS Consolessdgfsdgsdgfsdgsdgsd</label></h2>
-
-                    <div class="detail detail-img"><i class="fa-brands fa-aws"></i></div>
-                    <h2 class="detail detail-title">AWS Consolessdgfsdgsdgfsdgsdgsd</h2>
-                    <div class="detail detail-menu">
-                    </div>
-                </div>
-
-                <input type="radio" name="curApp" id="radio5">
-                <div class="app">
-                    <div class="icon icon-img">
-                        <label for="radio5"><i class="fa-brands fa-aws"></i></label>
-                    </div>
-                    <h2 class="icon icon-title"><label for="radio5">AWS Console</label></h2>
-
-                    <div class="detail detail-img"><a href="#"><i class="fa-brands fa-aws"></a></i></div>
-                    <h2 class="detail detail-title"><a href="#">AWS Console</a></h2>
-                    <div class="detail detail-menu">
-                        <div>
-                            <button><i class="fa-solid fa-user"></i></button>
-                        </div>
-                        <div>
-                            <button><i class="fa-solid fa-key"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <input type="radio" name="curApp" id="radio6">
-                <div class="app">
-                    <div class="icon icon-img">
-                        <label for="radio6"><i class="fa-brands fa-aws"></i></label>
-                    </div>
-                    <h2 class="icon icon-title"><label for="radio6">AWS Console</label></h2>
-
-                    <div class="detail detail-img"><a href="#"><i class="fa-brands fa-aws"></a></i></div>
-                    <h2 class="detail detail-title"><a href="#">AWS Console</a></h2>
-                    <div class="detail detail-menu">
-                        <div>
-                            <button><i class="fa-solid fa-user"></i></button>
-                        </div>
-                        <div>
-                            <button><i class="fa-solid fa-key"></i></button>
-                        </div>
-                    </div>
-                </div>
             </main>
 
             <footer>
