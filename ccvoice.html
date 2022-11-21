@@ -22,7 +22,7 @@
 
             links: [
                 { name: 'tomcat', icon: 'fa-solid fa-cat', url: 'https://tomcat.apache.org/', user: 'tomcat_account', password: 'tomcat_password' },
-                { name: 'google', icon: 'fa-brands fa-google', url: 'https://www.google.com/', user: 'google_account', password: 'google_password' },
+                { name: 'google', icon: 'fa-brands fa-google', url: 'https://www.google.com/' },
                 { name: 'aws', icon: 'fa-brands fa-aws', url: 'https://aws.amazon.com/jp/', user: 'aws_account', password: 'aws_password' },
                 { name: 'twitter', icon: 'fa-brands fa-twitter', url: 'https://twitter.com/', user: 'user_account', password: 'mistery_password' },
                 { name: 'LinkedIn', icon: 'fa-brands fa-linkedin', url: 'https://www.linkedin.com/', user: 'user_account', password: 'mistery_password' },
@@ -31,10 +31,15 @@
                 { name: 'youtube', icon: 'fa-brands fa-youtube', url: 'https://www.youtube.com/', user: 'user_account', password: 'mistery_password' }
             ],
             rdps: [
-                { name: 'qccivr', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' },
-                { name: 'hccivr', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' },
-                { name: 'hccgax', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' }
-            ]
+                { name: 'qccivr01', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' },
+                { name: 'hccivr01', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' },
+                { name: 'hccgax02', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' }
+            ],
+            explorers: [
+                { name: '手順書', dir: 'C:\\'},
+                { name: '手順書', dir: 'd:\hogehoge\hoge' , user: 'tomcat_account', password: 'tomcat_password' },
+                { name: '手順書', dir: 'd:\hogehoge\hoge' , user: 'tomcat_account', password: 'tomcat_password' }
+            ],
         }
 
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -77,7 +82,7 @@
                         return result;
                     }
                 }
-            }).mount('#links');
+            }).mount('#cc');
         });
 
 
@@ -203,6 +208,11 @@
             padding: 20px;
             width: 100%;
             min-height: 100%;
+            pointer-events:none;
+        }
+
+        .card.zoomup .box{
+            pointer-events:initial;
         }
 
         .box:before {
@@ -255,7 +265,7 @@
             min-width: 48px;
             height: 48px;
             background: #fff;
-            overflow: hidden;
+            /* overflow: hidden; */
             border: 6px solid #fff;
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
             margin-right: 20px;
@@ -304,7 +314,7 @@
 
         .box .list .content .buttons {
             display: flex;
-            gap: 8px;
+            gap: 16px;
 
         }
 
@@ -349,7 +359,7 @@
 
         <h2 class="title" data-text-before="CC" data-text-after="Audio"><i class="fa-solid fa-phone-volume"></i></h2>
 
-        <div class="circle" id="links">
+        <div class="circle" id="cc">
 
             <div class="card" style="--i:-1;--zIndex:3;--opacity:1;" onclick="zoomup(this);">
                 <div class="box" style="--color:#f8bf95">
@@ -360,10 +370,10 @@
                             <i :class="link.icon"></i>
                         </div>
                         <div class="content">
-                            <h4><a :href="link.url" target="_blank">Ricardo Flanagan</a></h4>
+                            <h4><a :href="link.url" target="_blank">{{link.name}}</a></h4>
                             <div class="buttons">
-                                <button type="button" @click="execCopy(link.user)">USER</button>
-                                <button type="button" @click="execCopy(link.password)">PASSWORD</button>
+                                <button v-if="link.user" type="button" @click="execCopy(link.user)">USER</button>
+                                <button v-if="link.password" type="button" @click="execCopy(link.password)">PASSWORD</button>
                             </div>
                         </div>
                     </div>
@@ -382,8 +392,8 @@
                         <div class="content">
                             <button class="ip" @click="execCopy(rdp.ip)">{{rdp.ip}}</button>
                             <div class="buttons">
-                                <button type="button" @click="execCopy(rdp.user)">{{rdp.user}}</button>
-                                <button type="button" @click="execCopy(rdp.password)">PASSWORD</button>
+                                <button v-if="rdp.user"  type="button" @click="execCopy(rdp.user)">{{rdp.user}}</button>
+                                <button v-if="rdp.password"  type="button" @click="execCopy(rdp.password)">PASSWORD</button>
                             </div>
                         </div>
                     </div>
@@ -395,83 +405,20 @@
                 <div class="box" style="--color:#f9cfc8">
                     <h3>EXPLORER</h3>
 
-                    <div class="list">
+                    <div class="list" v-for="(explorer, index) in explorers">
                         <div class="imgBx">
                             <i class="fa-brands fa-aws"></i>
                         </div>
                         <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
+                            <h4><a :href="explorer.dir" target="_blank">{{explorer.name}}</a></h4>
                             <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
+                                <button v-if="explorer.dir" type="button" @click="execCopy(explorer.dir)">DIR</button>
+                                <button v-if="explorer.user" type="button" @click="execCopy(explorer.user)">USER</button>
+                                <button v-if="explorer.password" type="button" @click="execCopy(explorer.password)">PASSWORD</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
