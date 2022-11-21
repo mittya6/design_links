@@ -29,6 +29,11 @@
                 { name: 'github', icon: 'fa-brands fa-github', url: 'https://github.com/', user: 'user_account', password: 'mistery_password' },
                 { name: 'facebook', icon: 'fa-brands fa-facebook', url: 'https://www.facebook.com/', user: 'user_account', password: 'mistery_password' },
                 { name: 'youtube', icon: 'fa-brands fa-youtube', url: 'https://www.youtube.com/', user: 'user_account', password: 'mistery_password' }
+            ],
+            rdps: [
+                { name: 'qccivr', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' },
+                { name: 'hccivr', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' },
+                { name: 'hccgax', ip: '129.249.120.141', user: 'tomcat_account', password: 'tomcat_password' }
             ]
         }
 
@@ -72,7 +77,7 @@
                         return result;
                     }
                 }
-            }).mount('#mobile');
+            }).mount('#links');
         });
 
 
@@ -263,6 +268,11 @@
             z-index: 2;
         }
 
+        .box .list .imgBx p {
+            font-size: 8px;
+            z-index: 2;
+        }
+
         .box .list .content {
             position: relative;
             display: flex;
@@ -272,13 +282,16 @@
 
         }
 
-        .box .list .content .rank {
-            position: absolute;
-            right: 0;
-            font-size: 2em;
-            color: #fff;
-            transform: 0.5s;
+        .box .list .content .ip {
+            font-size: 4px;
+            padding: 2px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            margin-bottom: 4px;
         }
+
 
         .box .list .content h4 a {
             font-size: 8px;
@@ -286,6 +299,7 @@
             text-transform: uppercase;
             transition: 0.5s;
             color: #000;
+            text-decoration: none;
         }
 
         .box .list .content .buttons {
@@ -297,7 +311,7 @@
         .box .list .content .buttons button {
             font-size: 4px;
             padding: 2px;
-            width: 64px;
+            width: 100%;
             border: 1px solid #888;
             border-radius: 8px;
             background: #fff;
@@ -335,89 +349,25 @@
 
         <h2 class="title" data-text-before="CC" data-text-after="Audio"><i class="fa-solid fa-phone-volume"></i></h2>
 
-        <div class="circle">
+        <div class="circle" id="links">
 
             <div class="card" style="--i:-1;--zIndex:3;--opacity:1;" onclick="zoomup(this);">
                 <div class="box" style="--color:#f8bf95">
                     <h3>LINKS</h3>
 
-                    <div class="list">
+                    <div class="list" v-for="(link, index) in links">
                         <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
+                            <i :class="link.icon"></i>
                         </div>
                         <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
+                            <h4><a :href="link.url" target="_blank">Ricardo Flanagan</a></h4>
                             <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
+                                <button type="button" @click="execCopy(link.user)">USER</button>
+                                <button type="button" @click="execCopy(link.password)">PASSWORD</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -425,83 +375,19 @@
                 <div class="box" style="--color:#bee1d7">
                     <h3>RDP</h3>
 
-                    <div class="list">
+                    <div class="list" v-for="(rdp, index) in rdps">
                         <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
+                            <p>{{rdp.name}}</p>
                         </div>
                         <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
+                            <button class="ip" @click="execCopy(rdp.ip)">{{rdp.ip}}</button>
                             <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
+                                <button type="button" @click="execCopy(rdp.user)">{{rdp.user}}</button>
+                                <button type="button" @click="execCopy(rdp.password)">PASSWORD</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="list">
-                        <div class="imgBx">
-                            <i class="fa-brands fa-aws"></i>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Ricardo Flanagan</a></h4>
-                            <div class="buttons">
-                                <button>USER</button>
-                                <button>PASSWORD</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
