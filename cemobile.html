@@ -40,6 +40,8 @@
                 },
                 methods: {
                     execCopy: function (string) {
+                        event.preventDefault();
+
                         // 空div 生成
                         var tmp = document.createElement("div");
                         // 選択用のタグ生成
@@ -130,6 +132,21 @@
 
         }
 
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        /*スクロールバーの軌道*/
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        /*スクロールバーの動く部分*/
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+
         .mobile {
             height: 90vh;
             border-radius: 30px;
@@ -156,13 +173,13 @@
 
         main {
             display: grid;
-            grid-template-columns: repeat(4, 80px);
+            grid-template-columns: repeat(auto-fill, 80px);
             justify-content: center;
-            align-content: center;
             gap: 16px;
             padding: 16px;
             position: relative;
             height: 86%;
+            overflow: auto;
         }
 
         main input[type="radio"] {
@@ -224,6 +241,7 @@
                 transform: scale(0);
 
             }
+
             100% {
                 transform: scale(1);
             }
@@ -315,8 +333,8 @@
         main input[type="radio"]:checked+.app .detail.detail-menu button:active {
             transform: scale(0.9);
         }
-        
-        main input[type="radio"]:checked+.app .detail.detail-menu button span{
+
+        main input[type="radio"]:checked+.app .detail.detail-menu button span {
             font-size: 8px;
 
         }
@@ -374,10 +392,12 @@
                         <h2 class="detail detail-title"><a :href="link.url" target="_blank">{{ link.name }}</a></h2>
                         <div class="detail detail-menu">
                             <div>
-                                <button @click="execCopy(link.user)"><i class="fa-solid fa-user"></i><br><span>user</span></button>
+                                <button type="button" @click="execCopy(link.user)"><i
+                                        class="fa-solid fa-user"></i><br><span>user</span></button>
                             </div>
                             <div>
-                                <button @click="execCopy(link.password)"><i class="fa-solid fa-key"></i><br><span>password</span></button>
+                                <button type="button" @click="execCopy(link.password)"><i
+                                        class="fa-solid fa-key"></i><br><span>password</span></button>
                             </div>
                         </div>
                     </div>
