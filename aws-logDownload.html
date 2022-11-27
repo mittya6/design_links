@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.6/dayjs.min.js"
+        integrity="sha512-hcV6DX35BKgiTiWYrJgPbu3FxS6CsCjKgmrsPRpUPkXWbvPiKxvSVSdhWX0yXcPctOI2FJ4WP6N1zH+17B/sAA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+            overflow: hidden;
+        }
+
+        button:active {
+            transform: translateY(4px);
+        }
+
+        .switdh {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 10%;
+            right: 10%;
+            transition: 0.5s;
+        }
+
+
+
+        .switdh button {
+            appearance: none;
+            background: transparent;
+            outline: 0;
+            border: none;
+            backface-visibility: hidden;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 2em;
+            width: 64px;
+            height: 64px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: 0.5s;
+        }
+
+        .switdh button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+
+        }
+
+        .switdh>div {
+            position: absolute;
+            backface-visibility: hidden;
+            transition: 0.5s;
+        }
+
+        .switdh>div.front {
+            transform: rotateY(0deg);
+        }
+
+        .switdh>div.back {
+            position: absolute;
+            transform: rotateY(180deg);
+
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+
+
+            transition: 0.5s;
+        }
+
+        .container.hidden{
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .fadeout {
+            animation: fadeOut 0.5s ease-out 0s forwards;
+            /* animation-fill-mode: forwards; */
+        }
+
+        .fadein {
+            animation: fadeIn 0.5s ease-in;
+            animation-fill-mode: forwards;
+
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                z-index: 1;
+            }
+
+            99% {
+                opacity: 0;
+                z-index: 1;
+            }
+
+            100% {
+                opacity: 0;
+                z-index: -1;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                z-index: 1;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container.right {
+            left: 1500px;
+        }
+
+        .container.left {
+            left: -1500px;
+        }
+
+        .container>div {
+            width: 100%;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 40px;
+            transition-duration: 1s;
+            transition-timing-function: ease-in-put;
+            color: #fff;
+            font-weight: 200;
+        }
+
+        .container input {
+            appearance: none;
+            outline: 0;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            width: 250px;
+
+            padding: 10px 15px;
+            color: #fff;
+
+            font-size: 18px;
+            font-weight: 300;
+
+            transition-duration: 0.25s;
+
+            color-scheme: dark;
+        }
+
+        .container input::placeholder {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .container input:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .container input:focus {
+            background-color: white;
+            transform: scale(1.2);
+            color: #53e3a6;
+            color-scheme: initial;
+        }
+
+        .container input[name="logGroupName"] {
+            width: 100%;
+        }
+
+        .container button {
+            appearance: none;
+            outline: 0;
+            background-color: white;
+            border: 0;
+            padding: 10px 15px;
+            color: #53e3a6;
+            border-radius: 3px;
+            width: 250px;
+            cursor: pointer;
+            font-size: 18px;
+            transition-duration: 0.25s;
+        }
+
+        .container button:hover {
+            background-color: rgb(245, 247, 249);
+        }
+
+
+        ul.bg-bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        ul.bg-bubbles li {
+            position: absolute;
+            left: var(--left);
+            display: block;
+            width: var(--width);
+            height: var(--width);
+            list-style: none;
+            background-color: #fff;
+            opacity: 0;
+            bottom: -160px;
+            animation: square var(--duration) linear infinite, show 10s ease-in;
+            animation-fill-mode: forwards;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes show {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0.15;
+            }
+        }
+
+        @keyframes square {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-120vh) rotate(600deg);
+            }
+        }
+
+        /** Loading start */
+
+        .container .ring {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: -30px;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top: 4px solid #feff32;
+            animation: animate 4s linear infinite;
+        }
+
+        .container .ring::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            background: #feff32;
+            box-shadow: 0 0 0 5px #feff3233,
+                0 0 0 10px #feff3233,
+                0 0 0 20px #feff3211,
+                0 0 20px #feff32,
+                0 0 50px #feff32;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .container .ring:nth-child(2) {
+
+            animation: animate2 4s linear infinite;
+            animation-delay: -1s;
+            border-top: 4px solid transparent;
+            border-left: 4px solid #fe98e4;
+        }
+
+        .container .ring:nth-child(2)::before {
+            content: '';
+            position: absolute;
+            top: initial;
+            bottom: 12px;
+            left: 12px;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            background: #fe98e4;
+            box-shadow: 0 0 0 5px #fe98e433,
+                0 0 0 10px #fe98e433,
+                0 0 0 20px #fe98e411,
+                0 0 20px #fe98e4,
+                0 0 50px #fe98e4;
+        }
+
+        @keyframes animate2 {
+            0% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+
+        .container .ring:nth-child(3) {
+            animation: animate2 4s linear infinite;
+            animation-delay: -3s;
+            position: absolute;
+            top: -66.66px;
+            border-top: 4px solid transparent;
+            border-left: 4px solid #00c8de;
+        }
+
+
+        .container .ring:nth-child(3)::before {
+            content: '';
+            position: absolute;
+            top: initial;
+            bottom: 12px;
+            left: 12px;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            background: #00c8de;
+            box-shadow: 0 0 0 5px #00c8de33,
+                0 0 0 10px #00c8de33,
+                0 0 0 20px #00c8de11,
+                0 0 20px #00c8de,
+                0 0 50px #00c8de;
+        }
+
+        .container p {
+            position: absolute;
+            color: #fff;
+            font-size: 1.5em;
+            bottom: -80px;
+            letter-spacing: 0.15em;
+        }
+
+        /** Loading end */
+    </style>
+    <script>
+        console.log(dayjs().format());
+        //document.getElementById("myLocalDate").defaultValue = "2015-01-02T11:42:13.510";
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            //日付のデフォルト表示
+            const inputFrom = document.querySelector('input[name="from"]');
+            inputFrom.defaultValue = dayjs().add(-1, 'h').format('YYYY-MM-DDTHH:00');
+            const inputTo = document.querySelector('input[name="to"]');
+            inputTo.defaultValue = dayjs().format('YYYY-MM-DDTHH:00');
+
+        });
+
+        function toggleForm() {
+            const logForm = document.getElementById('logForm');
+            logForm.classList.toggle('left');
+            const accountForm = document.getElementById('accountForm');
+            accountForm.classList.toggle('right');
+
+            document.querySelectorAll('.switdh > div').forEach((target) => target.classList.toggle('back'));
+            document.querySelectorAll('.switdh > div').forEach((target) => target.classList.toggle('front'));
+        }
+
+        function downloading() {
+            const loadingScr = document.getElementById('loading');
+            loadingScr.classList.remove('fadeout');
+            loadingScr.classList.add('fadein');
+            loadingScr.classList.remove('hidden');
+
+
+            const logForm = document.getElementById('logForm');
+            loadingScr.classList.remove('fadein');
+            logForm.classList.add('fadeout');
+
+            const switchBtns = document.getElementById('switch');
+            switchBtns.classList.remove('fadein');
+            switchBtns.classList.add('fadeout');
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <div class="switdh" id="switch">
+        <div class="front">
+            <button id="toUserBUtton" onclick="toggleForm();"><i class="fa-regular fa-user"></i><i
+                    class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="back">
+            <button id="toLogButton" onclick="toggleForm();"><i class="fa-solid fa-arrow-left"></i><i
+                    class="fa-regular fa-note-sticky"></i></button>
+        </div>
+    </div>
+
+    <div id="logForm" class="container">
+        <h1><i class="fa-brands fa-aws"> Log Download</i></h1>
+        <div>
+            <input type="text" name="logGroupName" placeholder="Log Group Name" spellcheck=”false”>
+        </div>
+        <div>
+            <input type="datetime-local" name="from" placeholder="Password" spellcheck=”false”>
+            <span> ～ </span>
+            <input type="datetime-local" name="to" placeholder="Password" spellcheck=”false”>
+        </div>
+        <div>
+            <button type="submit" id="login-button" onclick="downloading();">Download</button>
+        </div>
+    </div>
+
+    <div id="accountForm" class="container right">
+        <h1><i class="fa-brands fa-aws"> Account</i></h1>
+        <div>
+            <input type="text" name="accessKeyID" placeholder="access key ID" spellcheck=”false”>
+        </div>
+        <div>
+            <input type="text" name="secretKeyID" placeholder="secret key ID" spellcheck=”false”>
+        </div>
+        <div>
+            <button type="submit" id="login-button">Test</button>
+        </div>
+    </div>
+
+
+    <ul class="bg-bubbles">
+        <li style="--left:10%;--width:40px;--duration:25s;--delay:-10s;"></li>
+        <li style="--left:20%;--width:80px;--duration:22s;--delay:17s;"></li>
+        <li style="--left:25%;--width:40px;--duration:25s;--delay:-4s;"></li>
+        <li style="--left:40%;--width:60px;--duration:22s;--delay:0s;"></li>
+        <li style="--left:70%;--width:40px;--duration:25s;--delay:0s;"></li>
+        <li style="--left:80%;--width:120px;--duration:25s;--delay:-3s;"></li>
+        <li style="--left:32%;--width:160px;--duration:25s;--delay:7s;"></li>
+        <li style="--left:55%;--width:20px;--duration:40s;--delay:-15s;"></li>
+        <li style="--left:25%;--width:10px;--duration:40s;--delay:2s;"></li>
+        <li style="--left:90%;--width:160px;--duration:25s;--delay:11s;"></li>
+    </ul>
+
+    <div id="loading" class="container hidden">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <p>Downloading....</p>
+    </div>
+</body>
+
+</html>
