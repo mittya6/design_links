@@ -7,8 +7,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.410.0.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.6/dayjs.min.js"
         integrity="sha512-hcV6DX35BKgiTiWYrJgPbu3FxS6CsCjKgmrsPRpUPkXWbvPiKxvSVSdhWX0yXcPctOI2FJ4WP6N1zH+17B/sAA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+        integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"
+        integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         * {
@@ -95,7 +105,7 @@
             transition: 0.5s;
         }
 
-        .container.hidden{
+        .container.hidden {
             z-index: -1;
             opacity: 0;
         }
@@ -140,11 +150,11 @@
         }
 
         .container.right {
-            left: 1500px;
+            left: 2500px;
         }
 
         .container.left {
-            left: -1500px;
+            left: -2500px;
         }
 
         .container>div {
@@ -396,7 +406,7 @@
             document.querySelectorAll('.switdh > div').forEach((target) => target.classList.toggle('front'));
         }
 
-        function downloading() {
+        async function downloading() {
             const loadingScr = document.getElementById('loading');
             loadingScr.classList.remove('fadeout');
             loadingScr.classList.add('fadein');
@@ -410,7 +420,66 @@
             const switchBtns = document.getElementById('switch');
             switchBtns.classList.remove('fadein');
             switchBtns.classList.add('fadeout');
+
+            awsConfig();
+            await filterLogEvents();
+            
+
+            loadingScr.classList.add('fadeout');
+            loadingScr.classList.remove('fadein');
+
+            loadingScr.classList.add('fadein');
+            logForm.classList.remove('fadeout');
+
+            switchBtns.classList.add('fadein');
+            switchBtns.classList.remove('fadeout');
         }
+
+        function awsConfig() {
+            AWS.config = new AWS.Config({
+                accessKeyId: '',
+                secretAccessKey: '',
+                region: ''
+            });
+        }
+
+        async function filterLogEvents(){
+
+            const zip = new JSZip();
+
+            const cloudwatchlogs = new AWS.cloudwatchlogs();
+            const params = {
+                logGroupName: '',
+                filterPattern: '?開始 ?終了 ?完了',
+                startTime: dayjs('2022/11/23 00:00:00').toDate().getTime(),
+                endTime: dayjs('2022/11/23 23:00:00').toDate().getTime()
+            }
+
+            let count = 0;
+            while(true){
+                count++;
+                let curLogs = await cloudwatchlogs.filterLogEvents(params).promise();
+
+                let messages = '';
+                curLogs.events.forEach((target) => {
+                    messages += target.message;
+
+                });
+
+                zip.file(`${count}.log`,messages);
+
+                if(curLogs.nextToken == null){
+                    break;
+                }
+
+                params.nextToken = curLogs.nextToken;
+            }
+
+            zip.generateAsync({ type: "blob"}).then(function(blob){
+                saveAs(blob,'hello.zip')
+            });
+        }
+
 
     </script>
 </head>
