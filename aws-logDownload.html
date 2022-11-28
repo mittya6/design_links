@@ -414,7 +414,7 @@
 
 
             const logForm = document.getElementById('logForm');
-            loadingScr.classList.remove('fadein');
+            logForm.classList.remove('fadein');
             logForm.classList.add('fadeout');
 
             const switchBtns = document.getElementById('switch');
@@ -428,7 +428,7 @@
             loadingScr.classList.add('fadeout');
             loadingScr.classList.remove('fadein');
 
-            loadingScr.classList.add('fadein');
+            logForm.classList.add('fadein');
             logForm.classList.remove('fadeout');
 
             switchBtns.classList.add('fadein');
@@ -451,9 +451,11 @@
 
             const zip = new JSZip();
 
-            const cloudwatchlogs = new AWS.Cloudwatchlogs();
+            const logGroupName = document.querySelector('input[name="logGroupName"]').value;
+
+            const cloudwatchlogs = new AWS.CloudwatchLogs();
             const params = {
-                logGroupName: '',
+                logGroupName: logGroupName,
                 filterPattern: '?開始 ?終了 ?完了',
                 startTime: dayjs('2022/11/23 00:00:00').toDate().getTime(),
                 endTime: dayjs('2022/11/23 23:00:00').toDate().getTime()
@@ -522,7 +524,7 @@
             <input type="text" name="accessKeyID" placeholder="access key ID" spellcheck=”false”>
         </div>
         <div>
-            <input type="text" name="secretKeyID" placeholder="secret key ID" spellcheck=”false”>
+            <input type="password" name="secretKeyID" placeholder="secret key ID" spellcheck=”false”>
         </div>
         <div>
             <button type="submit" id="login-button">Test</button>
