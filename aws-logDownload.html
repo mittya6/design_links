@@ -454,11 +454,12 @@
             const logGroupName = document.querySelector('input[name="logGroupName"]').value;
             const from = document.querySelector('input[name="from"]').value;
             const to = document.querySelector('input[name="to"]').value;
+            const filterPattern = document.querySelector('input[name="filterPattern"]').value;
 
             const cloudwatchlogs = new AWS.CloudWatchLogs();
             const params = {
                 logGroupName: logGroupName,
-                filterPattern: '?開始 ?終了 ?完了',
+                filterPattern: filterPattern,
                 startTime: dayjs(from).toDate().getTime(),
                 endTime: dayjs(to).toDate().getTime()
             }
@@ -516,6 +517,9 @@
             <input type="datetime-local" name="to" placeholder="Password" spellcheck=”false”>
         </div>
         <div>
+            <input type="text" name="filterPattern" placeholder="Filter Pattern" spellcheck=”false” value="?開始 ?終了 ?完了">
+        </div>
+        <div>
             <button type="submit" id="login-button" onclick="downloading();">Download</button>
         </div>
     </div>
@@ -529,7 +533,7 @@
             <input type="password" name="secretKeyID" placeholder="secret key ID" spellcheck=”false”>
         </div>
         <div>
-            <button type="submit" id="login-button">Test</button>
+            <!-- <button type="submit" id="login-button">Test</button> -->
         </div>
     </div>
 
