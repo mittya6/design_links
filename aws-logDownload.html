@@ -441,7 +441,7 @@
             const secretKeyID = document.querySelector('input[name="secretKeyID"]').value;
 
             AWS.config = new AWS.Config({
-                accessKeyId: secretKeyID,
+                accessKeyId: accessKeyID,
                 secretAccessKey: secretKeyID,
                 region: 'ap-northeast-1'
             });
@@ -452,13 +452,15 @@
             const zip = new JSZip();
 
             const logGroupName = document.querySelector('input[name="logGroupName"]').value;
+            const from = document.querySelector('input[name="from"]').value;
+            const to = document.querySelector('input[name="to"]').value;
 
-            const cloudwatchlogs = new AWS.CloudwatchLogs();
+            const cloudwatchlogs = new AWS.CloudWatchLogs();
             const params = {
                 logGroupName: logGroupName,
                 filterPattern: '?開始 ?終了 ?完了',
-                startTime: dayjs('2022/11/23 00:00:00').toDate().getTime(),
-                endTime: dayjs('2022/11/23 23:00:00').toDate().getTime()
+                startTime: dayjs(from).toDate().getTime(),
+                endTime: dayjs(to).toDate().getTime()
             }
 
             let count = 0;
