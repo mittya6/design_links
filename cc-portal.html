@@ -72,6 +72,9 @@
                     }
                 },
                 methods: {
+                    formatIndex(idx) {
+                        return String(idx + 1).padStart(2, '0');
+                    },
                     execCopy(string, label = 'copied') {
                         if (!string) return;
 
@@ -111,14 +114,14 @@
                         a.click();
                         document.body.removeChild(a);
                         URL.revokeObjectURL(url);
-                        alertify.message(`<i class="fa-solid fa-desktop"></i> ${rdp.name}.rdp を出力しました`);
+                        alertify.success(`<i class="fa-solid fa-desktop"></i> ${rdp.name}.rdp を出力しました`);
                     },
                     updateClock() {
                         const now = new Date();
                         const pad = (n) => String(n).padStart(2, '0');
                         this.currentTime = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
                         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-                        this.currentDate = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} (${days[now.getDay()]})`;
+                        this.currentDate = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${days[now.getDay()]}`;
                     }
                 },
                 mounted() {
@@ -130,23 +133,21 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
         :root {
-            --bg-base: #f4f7fb;
-            --bg-panel: rgba(255, 255, 255, 0.88);
-            --bg-card: #ffffff;
-            --bg-card-hover: #ffffff;
-            --bg-subtle: #f1f5f9;
-            --border-light: #e2e8f0;
-            --border-glow: #38bdf8;
-            --accent-blue: #0284c7;
-            --accent-cyan: #0ea5e9;
-            --accent-teal: #0d9488;
-            --accent-indigo: #6366f1;
-            --accent-rose: #e11d48;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
+            /* 1. ウォームチャコール × モーヴグレー ＋ 差し色1色（ローズロゼ） */
+            --text-dark: #433a3f;
+            --text-main: #5c4f56;
+            --text-sub: #8c7b83;
+            --accent-rose: #d94673;
+            --accent-rose-soft: rgba(217, 70, 115, 0.10);
+            --accent-rose-glow: rgba(217, 70, 115, 0.24);
+            --glass-bg: rgba(255, 255, 255, 0.68);
+            --glass-bg-hover: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --subtle-border: rgba(217, 185, 198, 0.42);
+            --subtle-fill: rgba(250, 242, 246, 0.75);
         }
 
         * {
@@ -157,26 +158,78 @@
 
         body {
             font-family: 'Inter', 'Hiragino Sans', 'Meiryo', sans-serif;
-            background-color: var(--bg-base);
-            background-image:
-                radial-gradient(circle at 10% 15%, rgba(14, 165, 233, 0.10) 0%, transparent 40%),
-                radial-gradient(circle at 90% 12%, rgba(20, 184, 166, 0.10) 0%, transparent 42%),
-                radial-gradient(circle at 50% 90%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 65%, #faf7f8 100%);
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* 背景の淡いドットグリッド装飾 */
-        body::before {
-            content: '';
+        /* ② 背景を漂う淡い光のオーブ（球体）とサウンドウェーブ装飾 */
+        .ambient-bg {
             position: fixed;
             inset: 0;
-            background-image: radial-gradient(rgba(148, 163, 184, 0.28) 1px, transparent 1px);
-            background-size: 28px 28px;
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.45;
+            animation: floatOrb 18s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(246, 208, 221, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
+            top: -120px;
+            right: 8%;
+        }
+
+        .orb-2 {
+            width: 540px;
+            height: 540px;
+            background: radial-gradient(circle, rgba(249, 218, 229, 0.32) 0%, rgba(255, 255, 255, 0) 70%);
+            bottom: -160px;
+            left: 5%;
+            animation-delay: -7s;
+            animation-duration: 22s;
+        }
+
+        .orb-3 {
+            width: 340px;
+            height: 340px;
+            background: radial-gradient(circle, rgba(217, 70, 115, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
+            top: 40%;
+            left: 38%;
+            animation-delay: -4s;
+            animation-duration: 15s;
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(30px, -25px) scale(1.08);
+            }
+            100% {
+                transform: translate(-25px, 20px) scale(0.95);
+            }
+        }
+
+        .bg-wave-svg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 280px;
+            opacity: 0.35;
         }
 
         ::-webkit-scrollbar {
@@ -185,191 +238,216 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #faf5f7;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #decad2;
             border-radius: 4px;
         }
 
+        /* ノートPCでも左右にしっかり余白ができるコンテナ */
         #app {
             position: relative;
             z-index: 1;
-            width: 84%;
-            max-width: 1100px;
+            width: 82%;
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 36px 24px 64px;
+            padding: 42px 0 72px;
+        }
+
+        /* ④ 2カラム・ソフトフォンコンソール型レイアウト */
+        .portal-layout {
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* ====== 左カラム：ソフトフォン風オペレーターコンソール ====== */
+        .softphone-sidebar {
+            position: sticky;
+            top: 36px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--glass-border);
+            outline: 1px solid var(--subtle-border);
+            border-radius: 28px;
+            padding: 26px 22px;
+            box-shadow:
+                0 20px 50px rgba(67, 58, 63, 0.07),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95);
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 22px;
         }
 
-        /* ====== TOP SOFTPHONE / CONSOLE BAR ====== */
-        .console-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 20px 28px;
-            background: var(--bg-panel);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+        /* 受話器スピーカー風のスリット装飾 */
+        .speaker-notch {
+            width: 48px;
+            height: 5px;
+            background: rgba(140, 123, 131, 0.22);
+            border-radius: 99px;
+            margin: 0 auto -6px;
         }
 
-        .brand-area {
+        .brand-box {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .headset-emblem {
             position: relative;
-            width: 52px;
-            height: 52px;
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
             border-radius: 16px;
-            background: linear-gradient(135deg, #e0f2fe, #ccfbf1);
-            border: 1px solid #bae6fd;
+            background: linear-gradient(135deg, #ffffff 0%, #fdf2f6 100%);
+            border: 1px solid rgba(217, 70, 115, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: var(--accent-blue);
-            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.15);
+            font-size: 21px;
+            color: var(--accent-rose);
+            box-shadow: 0 8px 20px rgba(217, 70, 115, 0.14);
         }
 
-        /* 通話パルスリング */
         .headset-emblem::after {
             content: '';
             position: absolute;
             inset: -4px;
-            border-radius: 18px;
-            border: 1.5px solid var(--accent-cyan);
+            border-radius: 19px;
+            border: 1.5px solid var(--accent-rose);
             opacity: 0;
-            animation: pulse-ring 3s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+            animation: pulseRing 2.8s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
         }
 
-        @keyframes pulse-ring {
+        @keyframes pulseRing {
             0% {
-                transform: scale(0.95);
-                opacity: 0.6;
+                transform: scale(0.94);
+                opacity: 0.65;
             }
             100% {
-                transform: scale(1.22);
+                transform: scale(1.24);
                 opacity: 0;
             }
         }
 
-        .brand-title h1 {
-            font-size: 1.35rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-            background: linear-gradient(90deg, #0f172a, #0284c7, #0d9488);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .brand-text h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            color: var(--text-dark);
+            line-height: 1.2;
         }
 
-        .brand-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.78rem;
+        .brand-text p {
+            font-size: 0.72rem;
             color: var(--text-sub);
-            font-weight: 500;
-            margin-top: 4px;
+            letter-spacing: 0.08em;
+            margin-top: 3px;
+            font-weight: 600;
+        }
+
+        /* ソフトフォン液晶ディスプレイ（時計＋大型オーディオ波形） */
+        .softphone-display {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(251, 238, 243, 0.78));
+            border: 1px solid var(--subtle-border);
+            border-radius: 20px;
+            padding: 18px 16px 16px;
+            text-align: center;
+            box-shadow: inset 0 2px 8px rgba(67, 58, 63, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 99px;
+            background: var(--accent-rose-soft);
+            color: var(--accent-rose);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background: #10b981;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+            background: var(--accent-rose);
+            box-shadow: 0 0 8px var(--accent-rose);
         }
 
-        /* 音声波形イコライザー演出 */
-        .voice-wave {
+        .display-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: 0.04em;
+            line-height: 1.1;
+        }
+
+        .display-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        /* ④ コンタクトセンターのオーディオ波形ビジュアライザー */
+        .audio-visualizer {
             display: flex;
             align-items: center;
-            gap: 3px;
-            height: 18px;
-            margin-left: 8px;
+            justify-content: center;
+            gap: 4px;
+            height: 28px;
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(217, 185, 198, 0.5);
         }
 
-        .voice-wave span {
+        .audio-visualizer span {
             display: inline-block;
             width: 3px;
-            background: linear-gradient(to top, var(--accent-cyan), var(--accent-teal));
-            border-radius: 3px;
-            animation: wave 1.2s ease-in-out infinite;
-        }
-
-        .voice-wave span:nth-child(1) { height: 6px; animation-delay: 0.0s; }
-        .voice-wave span:nth-child(2) { height: 14px; animation-delay: 0.2s; }
-        .voice-wave span:nth-child(3) { height: 10px; animation-delay: 0.4s; }
-        .voice-wave span:nth-child(4) { height: 16px; animation-delay: 0.1s; }
-        .voice-wave span:nth-child(5) { height: 8px; animation-delay: 0.3s; }
-
-        @keyframes wave {
-            0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
-            50% { transform: scaleY(1.15); opacity: 1; }
-        }
-
-        /* 中央コントロール（タブ＆検索） */
-        .console-controls {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .tab-group {
-            display: flex;
-            background: var(--bg-subtle);
-            padding: 4px;
-            border-radius: 12px;
-            border: 1px solid var(--border-light);
-        }
-
-        .tab-btn {
-            border: 1px solid transparent;
-            background: transparent;
-            color: var(--text-sub);
-            font-size: 0.84rem;
-            font-weight: 600;
-            padding: 8px 15px;
-            border-radius: 9px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-main);
-        }
-
-        .tab-btn.active {
-            background: #ffffff;
-            color: var(--accent-blue);
-            border-color: var(--border-light);
-            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-        }
-
-        .badge-count {
-            font-size: 0.72rem;
-            background: #e0f2fe;
-            color: var(--accent-blue);
-            padding: 1px 7px;
             border-radius: 99px;
-            font-weight: 700;
+            background: linear-gradient(to top, rgba(217, 70, 115, 0.35), var(--accent-rose));
+            animation: eqBounce 1.3s ease-in-out infinite;
         }
 
+        .audio-visualizer span:nth-child(1)  { height: 8px;  animation-delay: 0.0s; }
+        .audio-visualizer span:nth-child(2)  { height: 14px; animation-delay: 0.2s; }
+        .audio-visualizer span:nth-child(3)  { height: 22px; animation-delay: 0.4s; }
+        .audio-visualizer span:nth-child(4)  { height: 12px; animation-delay: 0.1s; }
+        .audio-visualizer span:nth-child(5)  { height: 24px; animation-delay: 0.3s; }
+        .audio-visualizer span:nth-child(6)  { height: 18px; animation-delay: 0.5s; }
+        .audio-visualizer span:nth-child(7)  { height: 10px; animation-delay: 0.2s; }
+        .audio-visualizer span:nth-child(8)  { height: 20px; animation-delay: 0.4s; }
+        .audio-visualizer span:nth-child(9)  { height: 26px; animation-delay: 0.1s; }
+        .audio-visualizer span:nth-child(10) { height: 15px; animation-delay: 0.3s; }
+        .audio-visualizer span:nth-child(11) { height: 9px;  animation-delay: 0.5s; }
+        .audio-visualizer span:nth-child(12) { height: 18px; animation-delay: 0.15s; }
+        .audio-visualizer span:nth-child(13) { height: 7px;  animation-delay: 0.35s; }
+
+        @keyframes eqBounce {
+            0%, 100% {
+                transform: scaleY(0.35);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scaleY(1.05);
+                opacity: 1;
+            }
+        }
+
+        /* 検索ボックス */
         .search-box {
             position: relative;
             display: flex;
@@ -381,162 +459,246 @@
             left: 14px;
             color: var(--text-sub);
             font-size: 0.85rem;
+            transition: color 0.2s ease;
         }
 
         .search-box input {
-            background: #ffffff;
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            padding: 9px 14px 9px 38px;
-            color: var(--text-main);
-            font-size: 0.86rem;
-            width: 210px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--subtle-border);
+            border-radius: 14px;
+            padding: 11px 14px 11px 38px;
+            color: var(--text-dark);
+            font-size: 0.84rem;
             outline: none;
             transition: all 0.25s ease;
         }
 
         .search-box input::placeholder {
-            color: #94a3b8;
+            color: #b09fa6;
         }
 
         .search-box input:focus {
-            width: 250px;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+            background: #ffffff;
+            border-color: var(--accent-rose);
+            box-shadow: 0 0 0 3px var(--accent-rose-soft);
         }
 
-        /* 右側デジタル時計 */
-        .clock-panel {
-            text-align: right;
-            font-family: 'JetBrains Mono', monospace;
+        .search-box:focus-within i {
+            color: var(--accent-rose);
         }
 
-        .clock-time {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--accent-blue);
-            letter-spacing: 0.06em;
-            line-height: 1.1;
+        /* チャンネル切り替えナビゲーション */
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .clock-date {
-            font-size: 0.72rem;
+        .nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             color: var(--text-sub);
-            letter-spacing: 0.08em;
-            margin-top: 3px;
+            padding: 0 6px;
         }
 
-        /* ====== SECTION HEADINGS ====== */
+        .tab-btn {
+            width: 100%;
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.45);
+            color: var(--text-main);
+            font-size: 0.84rem;
+            font-weight: 600;
+            padding: 11px 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.22s ease;
+        }
+
+        .tab-btn-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn-left i {
+            width: 18px;
+            text-align: center;
+            color: var(--text-sub);
+            transition: color 0.22s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--text-dark);
+            transform: translateX(3px);
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: var(--text-dark);
+            border-color: rgba(217, 70, 115, 0.3);
+            box-shadow: 0 6px 18px rgba(217, 70, 115, 0.10);
+        }
+
+        .tab-btn.active .tab-btn-left i {
+            color: var(--accent-rose);
+        }
+
+        .badge-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            background: var(--subtle-fill);
+            color: var(--text-sub);
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-weight: 600;
+            transition: all 0.22s ease;
+        }
+
+        .tab-btn.active .badge-count {
+            background: var(--accent-rose);
+            color: #ffffff;
+        }
+
+        /* ====== 右カラム：メインコンテンツ領域 ====== */
+        .portal-main {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            min-width: 0;
+        }
+
         .section-block {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
         }
 
-        .section-title {
+        .section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 4px;
         }
 
-        .section-title-left {
+        .section-header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .section-indicator {
+        .section-badge {
             width: 36px;
             height: 36px;
-            border-radius: 10px;
+            border-radius: 11px;
+            background: var(--glass-bg);
+            border: 1px solid var(--subtle-border);
+            color: var(--accent-rose);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
+            box-shadow: 0 4px 12px rgba(67, 58, 63, 0.04);
         }
 
-        .section-indicator.links-theme {
-            background: #e0f2fe;
-            color: var(--accent-blue);
-            border: 1px solid #bae6fd;
-        }
-
-        .section-indicator.rdp-theme {
-            background: #ccfbf1;
-            color: var(--accent-teal);
-            border: 1px solid #99f6e4;
-        }
-
-        .section-title h2 {
-            font-size: 1.08rem;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: 0.03em;
+        .section-header h2 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: 0.04em;
         }
 
         .section-subtitle {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: var(--text-sub);
             margin-top: 2px;
         }
 
-        /* ====== WEB LINKS GRID ====== */
+        /* ====== グラスモーフィズム＋透かしデザインカード ====== */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
             gap: 18px;
         }
 
         .cc-card {
             position: relative;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: 16px;
-            padding: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border);
+            outline: 1px solid var(--subtle-border);
+            border-radius: 20px;
+            padding: 22px 20px 18px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 16px;
-            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
-            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        border-color 0.25s ease,
-                        box-shadow 0.25s ease;
+            gap: 18px;
+            box-shadow:
+                0 8px 24px rgba(67, 58, 63, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        background 0.28s ease,
+                        outline-color 0.28s ease,
+                        box-shadow 0.28s ease;
             overflow: hidden;
         }
 
-        .cc-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo));
-            opacity: 0.8;
-            transition: opacity 0.25s ease;
-        }
-
-        .cc-card.rdp-card::before {
-            background: linear-gradient(90deg, var(--accent-teal), var(--accent-cyan));
-        }
-
         .cc-card:hover {
-            transform: translateY(-4px);
-            border-color: #bae6fd;
-            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(14, 165, 233, 0.08);
+            transform: translateY(-5px);
+            background: var(--glass-bg-hover);
+            outline-color: rgba(217, 70, 115, 0.38);
+            box-shadow:
+                0 18px 36px rgba(67, 58, 63, 0.08),
+                0 4px 16px rgba(217, 70, 115, 0.08),
+                inset 0 1px 0 #ffffff;
         }
 
-        .cc-card.rdp-card:hover {
-            border-color: #99f6e4;
-            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(13, 148, 136, 0.08);
+        /* ③ 透かしナンバー＆大シルエットアイコン（ウォーターマーク） */
+        .watermark-num {
+            position: absolute;
+            top: 10px;
+            right: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: rgba(140, 123, 131, 0.10);
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+            transition: all 0.3s ease;
         }
 
-        .cc-card:hover::before {
-            opacity: 1;
+        .watermark-icon {
+            position: absolute;
+            right: -14px;
+            bottom: -16px;
+            font-size: 5.2rem;
+            color: rgba(217, 70, 115, 0.045);
+            transform: rotate(-15deg);
+            pointer-events: none;
+            user-select: none;
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.35s ease;
+        }
+
+        .cc-card:hover .watermark-num {
+            color: rgba(217, 70, 115, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .cc-card:hover .watermark-icon {
+            color: rgba(217, 70, 115, 0.09);
+            transform: rotate(-6deg) scale(1.08);
         }
 
         .card-top {
+            position: relative;
+            z-index: 1;
             display: flex;
             align-items: center;
             gap: 14px;
@@ -547,50 +709,36 @@
             height: 48px;
             min-width: 48px;
             border-radius: 14px;
-            background: #f0f9ff;
-            border: 1px solid #e0f2fe;
+            background: #ffffff;
+            border: 1px solid var(--subtle-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 21px;
-            color: var(--accent-blue);
+            font-size: 20px;
+            color: var(--accent-rose);
             text-decoration: none;
+            box-shadow: 0 4px 12px rgba(217, 70, 115, 0.08);
             transition: all 0.25s ease;
         }
 
         .cc-card:hover .app-icon-link {
-            background: #e0f2fe;
-            border-color: #7dd3fc;
-            transform: scale(1.05);
-        }
-
-        .rdp-card .app-icon-link {
-            background: #f0fdfa;
-            border-color: #ccfbf1;
-            color: var(--accent-teal);
-        }
-
-        .rdp-card:hover .app-icon-link {
-            background: #ccfbf1;
-            border-color: #5eead4;
+            background: var(--accent-rose);
+            border-color: var(--accent-rose);
+            color: #ffffff;
+            transform: scale(1.06) rotate(-3deg);
+            box-shadow: 0 8px 18px var(--accent-rose-glow);
         }
 
         .card-info {
             flex: 1;
             min-width: 0;
-        }
-
-        .card-title-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
+            padding-right: 28px;
         }
 
         .card-title {
-            font-size: 1rem;
+            font-size: 0.98rem;
             font-weight: 700;
-            color: var(--text-main);
+            color: var(--text-dark);
             text-decoration: none;
             white-space: nowrap;
             overflow: hidden;
@@ -598,20 +746,22 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            max-width: 100%;
             transition: color 0.2s ease;
         }
 
         a.card-title:hover {
-            color: var(--accent-blue);
+            color: var(--accent-rose);
         }
 
         .card-title .external-icon {
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             color: var(--text-sub);
+            opacity: 0.7;
         }
 
         .card-sub {
-            font-size: 0.75rem;
+            font-size: 0.73rem;
             color: var(--text-sub);
             white-space: nowrap;
             overflow: hidden;
@@ -622,26 +772,29 @@
 
         /* IPアドレスピル (RDP用) */
         .ip-copy-bar {
+            position: relative;
+            z-index: 1;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #f8fafc;
-            border: 1px solid var(--border-light);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid var(--subtle-border);
+            border-radius: 11px;
             padding: 8px 12px;
             cursor: pointer;
             transition: all 0.2s ease;
             width: 100%;
-            color: var(--text-main);
+            color: var(--text-dark);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.86rem;
-            font-weight: 500;
+            font-size: 0.84rem;
+            font-weight: 600;
         }
 
         .ip-copy-bar:hover {
-            background: #f0fdfa;
-            border-color: #5eead4;
-            color: var(--accent-teal);
+            background: #ffffff;
+            border-color: var(--accent-rose);
+            color: var(--accent-rose);
+            box-shadow: 0 4px 12px var(--accent-rose-soft);
         }
 
         .ip-copy-bar:active {
@@ -655,16 +808,16 @@
         }
 
         .ip-badge {
-            font-size: 0.68rem;
+            font-size: 0.64rem;
             padding: 2px 6px;
             border-radius: 5px;
-            background: #ccfbf1;
-            color: var(--accent-teal);
+            background: var(--accent-rose-soft);
+            color: var(--accent-rose);
             font-weight: 700;
         }
 
         .copy-hint {
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             color: var(--text-sub);
             display: flex;
             align-items: center;
@@ -673,6 +826,8 @@
 
         /* アクションボタン群 */
         .card-actions {
+            position: relative;
+            z-index: 1;
             display: flex;
             gap: 8px;
         }
@@ -685,10 +840,10 @@
             gap: 6px;
             padding: 8px 10px;
             border-radius: 10px;
-            border: 1px solid var(--border-light);
-            background: #f8fafc;
-            color: #334155;
-            font-size: 0.76rem;
+            border: 1px solid var(--subtle-border);
+            background: rgba(255, 255, 255, 0.82);
+            color: var(--text-main);
+            font-size: 0.74rem;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
@@ -697,12 +852,9 @@
         }
 
         .action-btn i {
-            font-size: 0.8rem;
-            color: var(--accent-blue);
-        }
-
-        .action-btn.pass-btn i {
+            font-size: 0.76rem;
             color: var(--accent-rose);
+            transition: color 0.2s ease;
         }
 
         .action-btn.rdp-dl-btn {
@@ -710,27 +862,15 @@
             padding: 8px 12px;
         }
 
-        .action-btn.rdp-dl-btn i {
-            color: var(--accent-teal);
-        }
-
         .action-btn:hover {
-            background: #e0f2fe;
-            border-color: #7dd3fc;
-            color: #0369a1;
-            transform: translateY(-1px);
+            background: var(--accent-rose);
+            border-color: var(--accent-rose);
+            color: #ffffff;
+            box-shadow: 0 4px 12px var(--accent-rose-glow);
         }
 
-        .action-btn.pass-btn:hover {
-            background: #ffe4e6;
-            border-color: #fda4af;
-            color: #be123c;
-        }
-
-        .action-btn.rdp-dl-btn:hover {
-            background: #ccfbf1;
-            border-color: #5eead4;
-            color: #0f766e;
+        .action-btn:hover i {
+            color: #ffffff;
         }
 
         .action-btn:active {
@@ -739,189 +879,224 @@
 
         /* Alertify カスタムトースト */
         .alertify-notifier .ajs-message.ajs-success {
-            background: #ffffff;
-            border: 1px solid #5eead4;
-            border-left: 4px solid var(--accent-teal);
-            color: var(--text-main);
+            background: var(--text-dark);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 4px solid var(--accent-rose);
+            color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 10px 25px rgba(67, 58, 63, 0.2);
             font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.82rem;
+            font-weight: 500;
         }
 
-        @media (max-width: 768px) {
+        /* タブレット・小画面向けレスポンシブ */
+        @media (max-width: 920px) {
             #app {
-                width: 92%;
-                padding: 20px 12px 48px;
+                width: 90%;
             }
-            .console-header {
-                flex-direction: column;
-                align-items: stretch;
+            .portal-layout {
+                grid-template-columns: 1fr;
             }
-            .clock-panel {
-                text-align: left;
-            }
-            .search-box input,
-            .search-box input:focus {
-                width: 100%;
+            .softphone-sidebar {
+                position: relative;
+                top: 0;
             }
         }
     </style>
 </head>
 
 <body>
+    <!-- ② 背景の光の球体（オーブ）＆サウンドウェーブ曲線 -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <svg class="bg-wave-svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path fill="none" stroke="rgba(217, 70, 115, 0.16)" stroke-width="2"
+                d="M0,192 C240,110 480,270 720,180 C960,90 1200,250 1440,160" />
+            <path fill="none" stroke="rgba(217, 70, 115, 0.10)" stroke-width="1.5"
+                d="M0,240 C300,150 600,290 900,190 C1150,110 1320,230 1440,190" />
+        </svg>
+    </div>
+
     <div id="app">
-        <!-- コンタクトセンター・オペレーターコンソール風ヘッダー -->
-        <header class="console-header">
-            <div class="brand-area">
-                <div class="headset-emblem">
-                    <i class="fa-solid fa-headset"></i>
-                </div>
-                <div class="brand-title">
-                    <h1>CONTACT CENTER PORTAL</h1>
-                    <div class="brand-status">
-                        <span class="status-dot"></span>
-                        <span>SYSTEM ONLINE</span>
-                        <div class="voice-wave" title="Voice Channel Active">
-                            <span></span><span></span><span></span><span></span><span></span>
-                        </div>
+        <div class="portal-layout">
+            <!-- ④ 左カラム：ソフトフォン型コンソールパネル -->
+            <aside class="softphone-sidebar">
+                <div class="speaker-notch"></div>
+
+                <div class="brand-box">
+                    <div class="headset-emblem">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>CC PORTAL</h1>
+                        <p>OPERATOR CONSOLE</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="console-controls">
-                <div class="tab-group">
-                    <button type="button" class="tab-btn" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">
-                        <i class="fa-solid fa-table-cells-large"></i> ALL
-                    </button>
-                    <button type="button" class="tab-btn" :class="{ active: activeTab === 'links' }" @click="activeTab = 'links'">
-                        <i class="fa-solid fa-globe"></i> WEB LINKS
-                        <span class="badge-count">{{ filteredLinks.length }}</span>
-                    </button>
-                    <button type="button" class="tab-btn" :class="{ active: activeTab === 'rdps' }" @click="activeTab = 'rdps'">
-                        <i class="fa-solid fa-server"></i> RDP SERVERS
-                        <span class="badge-count">{{ filteredRdps.length }}</span>
-                    </button>
+                <!-- 液晶ディスプレイ＆オーディオ波形 -->
+                <div class="softphone-display">
+                    <div class="status-pill">
+                        <span class="status-dot"></span>
+                        <span>VOICE LINE READY</span>
+                    </div>
+                    <div class="display-time">{{ currentTime }}</div>
+                    <div class="display-date">{{ currentDate }}</div>
+
+                    <div class="audio-visualizer" title="Acoustic Wave Monitor">
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </div>
                 </div>
 
+                <!-- 検索バー -->
                 <div class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" v-model="searchQuery" placeholder="システム名・IP・ユーザ検索..." spellcheck="false">
                 </div>
-            </div>
 
-            <div class="clock-panel">
-                <div class="clock-time">{{ currentTime }}</div>
-                <div class="clock-date">{{ currentDate }}</div>
-            </div>
-        </header>
-
-        <!-- WEB LINKS 一覧セクション -->
-        <section class="section-block" v-if="activeTab === 'all' || activeTab === 'links'">
-            <div class="section-title">
-                <div class="section-title-left">
-                    <div class="section-indicator links-theme">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
-                    <div>
-                        <h2>WEB SYSTEMS &amp; TOOLS</h2>
-                        <div class="section-subtitle">URLクリックで別タブ起動 / ボタンで認証情報をコピー</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="cards-grid">
-                <div class="cc-card" v-for="(link, index) in filteredLinks" :key="'link-' + index">
-                    <div class="card-top">
-                        <a class="app-icon-link" :href="link.url" target="_blank" rel="noopener" title="サイトを開く">
-                            <i :class="link.icon || 'fa-solid fa-link'"></i>
-                        </a>
-                        <div class="card-info">
-                            <div class="card-title-row">
-                                <a class="card-title" :href="link.url" target="_blank" rel="noopener">
-                                    {{ link.name }}
-                                    <i class="fa-solid fa-arrow-up-right-from-square external-icon"></i>
-                                </a>
-                            </div>
-                            <div class="card-sub">{{ link.url }}</div>
-                        </div>
-                    </div>
-
-                    <div class="card-actions">
-                        <button type="button" class="action-btn" @click="execCopy(link.url, 'URL copied')" title="URLをコピー">
-                            <i class="fa-solid fa-link"></i>
-                            <span>URL</span>
-                        </button>
-                        <button v-if="link.user" type="button" class="action-btn" @click="execCopy(link.user, `USER (${link.user}) copied`)" :title="link.user">
-                            <i class="fa-solid fa-user"></i>
-                            <span>USER</span>
-                        </button>
-                        <button v-if="link.password" type="button" class="action-btn pass-btn" @click="execCopy(link.password, 'PASSWORD copied')">
-                            <i class="fa-solid fa-key"></i>
-                            <span>PASS</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- RDP 接続情報一覧セクション -->
-        <section class="section-block" v-if="activeTab === 'all' || activeTab === 'rdps'">
-            <div class="section-title">
-                <div class="section-title-left">
-                    <div class="section-indicator rdp-theme">
-                        <i class="fa-solid fa-desktop"></i>
-                    </div>
-                    <div>
-                        <h2>RDP CONNECTION SERVERS</h2>
-                        <div class="section-subtitle">IP・アカウント情報のワンクリックコピー / .rdpファイルのダウンロード</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="cards-grid">
-                <div class="cc-card rdp-card" v-for="(rdp, index) in filteredRdps" :key="'rdp-' + index">
-                    <div class="card-top">
-                        <div class="app-icon-link" @click="execCopy(rdp.ip, `IP (${rdp.ip}) copied`)" style="cursor: pointer;" title="IPをコピー">
-                            <i class="fa-solid fa-server"></i>
-                        </div>
-                        <div class="card-info">
-                            <div class="card-title-row">
-                                <span class="card-title">{{ rdp.name }}</span>
-                            </div>
-                            <div class="card-sub" v-if="rdp.user">Account: {{ rdp.user }}</div>
-                            <div class="card-sub" v-else>Remote Desktop Host</div>
-                        </div>
-                    </div>
-
-                    <button type="button" class="ip-copy-bar" @click="execCopy(rdp.ip, `IP (${rdp.ip}) copied`)" title="クリックしてIPアドレスをコピー">
-                        <div class="ip-copy-left">
-                            <span class="ip-badge">IP</span>
-                            <span>{{ rdp.ip }}</span>
-                        </div>
-                        <span class="copy-hint"><i class="fa-regular fa-copy"></i> COPY</span>
+                <!-- チャンネル切り替えボタン -->
+                <div class="nav-group">
+                    <div class="nav-label">CHANNELS</div>
+                    <button type="button" class="tab-btn" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">
+                        <span class="tab-btn-left">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>ALL SYSTEMS</span>
+                        </span>
+                        <span class="badge-count">{{ filteredLinks.length + filteredRdps.length }}</span>
                     </button>
-
-                    <div class="card-actions">
-                        <button v-if="rdp.user" type="button" class="action-btn" @click="execCopy(rdp.user, `USER (${rdp.user}) copied`)">
-                            <i class="fa-solid fa-user-shield"></i>
-                            <span>{{ rdp.user }}</span>
-                        </button>
-                        <button v-if="rdp.password" type="button" class="action-btn pass-btn" @click="execCopy(rdp.password, 'PASSWORD copied')">
-                            <i class="fa-solid fa-key"></i>
-                            <span>PASSWORD</span>
-                        </button>
-                        <button type="button" class="action-btn rdp-dl-btn" @click="downloadRdp(rdp)" title="RDP接続ファイルをダウンロード">
-                            <i class="fa-solid fa-download"></i>
-                            <span>.rdp</span>
-                        </button>
-                    </div>
+                    <button type="button" class="tab-btn" :class="{ active: activeTab === 'links' }" @click="activeTab = 'links'">
+                        <span class="tab-btn-left">
+                            <i class="fa-solid fa-globe"></i>
+                            <span>WEB LINKS</span>
+                        </span>
+                        <span class="badge-count">{{ filteredLinks.length }}</span>
+                    </button>
+                    <button type="button" class="tab-btn" :class="{ active: activeTab === 'rdps' }" @click="activeTab = 'rdps'">
+                        <span class="tab-btn-left">
+                            <i class="fa-solid fa-server"></i>
+                            <span>RDP SERVERS</span>
+                        </span>
+                        <span class="badge-count">{{ filteredRdps.length }}</span>
+                    </button>
                 </div>
-            </div>
-        </section>
+            </aside>
+
+            <!-- 右カラム：カード一覧 -->
+            <main class="portal-main">
+                <!-- WEB LINKS 一覧セクション -->
+                <section class="section-block" v-if="activeTab === 'all' || activeTab === 'links'">
+                    <div class="section-header">
+                        <div class="section-header-left">
+                            <div class="section-badge">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <div>
+                                <h2>WEB SYSTEMS &amp; TOOLS</h2>
+                                <div class="section-subtitle">URLクリックで別タブ起動 / ボタンで認証情報をコピー</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="cc-card" v-for="(link, index) in filteredLinks" :key="'link-' + index">
+                            <!-- ③ 透かしナンバー＆大アイコンシルエット -->
+                            <span class="watermark-num">{{ formatIndex(index) }}</span>
+                            <i :class="[link.icon || 'fa-solid fa-link', 'watermark-icon']"></i>
+
+                            <div class="card-top">
+                                <a class="app-icon-link" :href="link.url" target="_blank" rel="noopener" title="サイトを開く">
+                                    <i :class="link.icon || 'fa-solid fa-link'"></i>
+                                </a>
+                                <div class="card-info">
+                                    <a class="card-title" :href="link.url" target="_blank" rel="noopener">
+                                        {{ link.name }}
+                                        <i class="fa-solid fa-arrow-up-right-from-square external-icon"></i>
+                                    </a>
+                                    <div class="card-sub">{{ link.url }}</div>
+                                </div>
+                            </div>
+
+                            <div class="card-actions">
+                                <button type="button" class="action-btn" @click="execCopy(link.url, 'URL copied')" title="URLをコピー">
+                                    <i class="fa-solid fa-link"></i>
+                                    <span>URL</span>
+                                </button>
+                                <button v-if="link.user" type="button" class="action-btn" @click="execCopy(link.user, `USER (${link.user}) copied`)" :title="link.user">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span>USER</span>
+                                </button>
+                                <button v-if="link.password" type="button" class="action-btn" @click="execCopy(link.password, 'PASSWORD copied')">
+                                    <i class="fa-solid fa-key"></i>
+                                    <span>PASS</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- RDP 接続情報一覧セクション -->
+                <section class="section-block" v-if="activeTab === 'all' || activeTab === 'rdps'">
+                    <div class="section-header">
+                        <div class="section-header-left">
+                            <div class="section-badge">
+                                <i class="fa-solid fa-desktop"></i>
+                            </div>
+                            <div>
+                                <h2>RDP CONNECTION SERVERS</h2>
+                                <div class="section-subtitle">IP・アカウント情報のワンクリックコピー / .rdpファイルのダウンロード</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="cc-card" v-for="(rdp, index) in filteredRdps" :key="'rdp-' + index">
+                            <!-- ③ 透かしナンバー＆大アイコンシルエット -->
+                            <span class="watermark-num">{{ formatIndex(index) }}</span>
+                            <i class="fa-solid fa-server watermark-icon"></i>
+
+                            <div class="card-top">
+                                <div class="app-icon-link" @click="execCopy(rdp.ip, `IP (${rdp.ip}) copied`)" style="cursor: pointer;" title="IPをコピー">
+                                    <i class="fa-solid fa-server"></i>
+                                </div>
+                                <div class="card-info">
+                                    <span class="card-title">{{ rdp.name }}</span>
+                                    <div class="card-sub" v-if="rdp.user">Account: {{ rdp.user }}</div>
+                                    <div class="card-sub" v-else>Remote Desktop Host</div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="ip-copy-bar" @click="execCopy(rdp.ip, `IP (${rdp.ip}) copied`)" title="クリックしてIPアドレスをコピー">
+                                <div class="ip-copy-left">
+                                    <span class="ip-badge">IP</span>
+                                    <span>{{ rdp.ip }}</span>
+                                </div>
+                                <span class="copy-hint"><i class="fa-regular fa-copy"></i> COPY</span>
+                            </button>
+
+                            <div class="card-actions">
+                                <button v-if="rdp.user" type="button" class="action-btn" @click="execCopy(rdp.user, `USER (${rdp.user}) copied`)">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                    <span>{{ rdp.user }}</span>
+                                </button>
+                                <button v-if="rdp.password" type="button" class="action-btn" @click="execCopy(rdp.password, 'PASSWORD copied')">
+                                    <i class="fa-solid fa-key"></i>
+                                    <span>PASSWORD</span>
+                                </button>
+                                <button type="button" class="action-btn rdp-dl-btn" @click="downloadRdp(rdp)" title="RDP接続ファイルをダウンロード">
+                                    <i class="fa-solid fa-download"></i>
+                                    <span>.rdp</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
     </div>
 </body>
 
 </html>
-
